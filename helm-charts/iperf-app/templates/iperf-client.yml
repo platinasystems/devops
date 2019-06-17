@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.iperf.client.deployment.name}}
+  labels:
+    app: {{.Values.iperf.client.labels.app}}
+    belongsToApp: {{.Values.iperf.belongsToApp}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Values.iperf.client.labels.app}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.iperf.client.labels.app}}
+    spec:
+      containers:
+      - name: {{.Values.iperf.client.container.name}}
+        image: {{.Values.iperf.image}}
+        command: ["/bin/bash"]
+        args: ["-c", "iperf -c {{.Values.iperf.server.service.name}} -p {{.Values.iperf.server.port}} -t {{.Values.iperf.client.timeout}} -P {{.Values.iperf.client.threads}}"]
+        ports:
+        - containerPort: {{.Values.iperf.client.port}}
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{.Values.iperf.client.service.name}}
+  labels:
+    belongsToApp: {{.Values.iperf.belongsToApp}}
+spec:
+  selector:
+    app: {{.Values.iperf.client.labels.app}}
+  ports: 
+  - protocol: TCP
+    port: {{.Values.iperf.client.port}}
+    targetPort: {{.Values.iperf.client.targetPort}}   

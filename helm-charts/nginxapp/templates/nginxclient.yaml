@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.NGINX_CLIENT_DEPLOYMENT}}
+  labels:
+    app: {{.Values.NGINX_CLIENT_APP}}
+    belongsToApp: {{.Values.BELONGS_TO_APP}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Values.NGINX_CLIENT_APP}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.NGINX_CLIENT_APP}}
+    spec:
+      containers:
+      - name: {{.Values.NGINX_CLIENT_APP}}
+        image: {{.Values.CLIENT_IMAGE_NAME}}
+        command: ["bash"]
+        args: ["/home/curl_script.sh","{{.Values.NGINX_SERVER_SERVICE}}:{{.Values.NGINX_SERVER_SERVICE_PORT}}"]
+        ports:
+        - containerPort: {{.Values.NGINX_CONTAINER_PORT}}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{.Values.NGINX_CLIENT_SERVICE}}
+  labels:
+    belongsToApp: {{.Values.BELONGS_TO_APP}}
+spec:
+  selector:
+    app: {{.Values.NGINX_CLIENT_APP}}
+  ports:
+  - protocol: TCP
+    port: {{.Values.NGINX_CLIENT_SERVICE_PORT}}
+    targetPort: 80

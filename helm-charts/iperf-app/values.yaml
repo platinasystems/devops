@@ -1,0 +1,32 @@
+# Default values for iperf-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+iperf:
+  client:
+    deployment:
+      name: "iperf-client"
+    service:              
+      name: "iperf-client-service"
+    container:
+      name: "iperf-client-contianer"
+    labels:
+      app: "iperf-client"
+    port: 5151 
+    targetPort: 5151 
+    timeout: 100000000
+    threads: 50 
+  server:
+    deployment:
+      name: "iperf-server"
+      replicas: 1  
+    service:
+      name: "iperf-server-service"
+    container:
+      name: "iperf-server-container"
+    labels:
+      app: "iperf-server"
+    port: 5050
+    targetPort: 5050    
+  belongsToApp: "iperf"      
+  image: "amitpandia/iperf:v1.0" 

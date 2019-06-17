@@ -1,0 +1,19 @@
+# Default values for iperf-svc-to-ext-deployment-app-details.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+API_VERSION: apps/v1
+BELONGS_TO_APP: iperf
+PROTOCOL: "TCP"
+SERVER_DEPLOYMENT_NAME: iperf-svc-to-ext-server-deployment-app
+SERVER_SERVICE_NAME: iperf-server-service-ext-app
+SERVER_APP_NAME: iperf-server-ext-app
+SERVER_APP: iperf-server-ext-app
+SERVER_CONTAINER_NAME: iperf-server-ext-app
+SERVER_CONTAINER_IMAGE: amitpandia/iperf:v1.0
+SERVER_CONTAINER_PORT: 5040
+SERVER_MEMORY_REQUESTS: "64Mi"
+SERVER_MEMORY_LIMITS: "128Mi"
+SERVER_CPU_REQUESTS: "250m"
+SERVER_CPU_LIMITS: "500m"
+SERVER_NODE_PORT: 5040

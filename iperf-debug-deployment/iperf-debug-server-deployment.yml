@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iperf-debug-server-deployment
+  labels:
+    app: iperf-debug-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iperf-debug-server
+  template:
+    metadata:
+      labels:
+        app: iperf-debug-server
+    spec:
+      containers:
+      - name: iperf-debug-server
+        image: amitpandia/iperf-debug:v1.0
+        command: ["iperf"]
+        args: ["-s", "-p", "5020"]
+        ports:
+        - containerPort: 5020
+

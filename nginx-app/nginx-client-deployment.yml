@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-client-deployment
+  labels:
+    app: nginx-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-client
+  template:
+    metadata:
+      labels:
+        app: nginx-client
+    spec:
+      containers:
+      - name: nginx-client
+        image: amitpandia/simple-nginx-client:v1.0
+        command: ["bash"]
+        args: ["/home/curl_script.sh","nginx-server-service:8082"]
+        ports:
+        - containerPort: 80

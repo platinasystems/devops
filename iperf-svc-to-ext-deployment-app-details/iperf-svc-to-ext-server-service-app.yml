@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: iperf-server-service-ext-app
+  labels:
+    belongsToApp: iperf
+#  annotations:
+#    kube-router.io/service.dsr: tunnel
+spec:
+  selector:
+    app: iperf-server-ext-app
+  externalIPs:
+    - 2.2.2.35
+  ports:
+  - protocol: TCP
+    port: 5040
+    targetPort: 5040
+

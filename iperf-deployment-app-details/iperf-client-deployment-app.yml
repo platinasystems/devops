@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iperf-client-deployment-app
+  labels:
+    app: iperf-client-app
+    belongsToApp: iperf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iperf-client-app
+  template:
+    metadata:
+      labels:
+        app: iperf-client-app
+    spec:
+      containers:
+      - name: iperf-client-app
+        image: amitpandia/iperf:v1.0
+        command: ["/bin/bash"]
+        args: ["-c", "iperf -c iperf-server-service-app -p 5050 -t 10000000 -P 50"]
+        ports:
+        - containerPort: 5050
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

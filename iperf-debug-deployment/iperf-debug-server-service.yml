@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: iperf-debug-server-service
+spec:
+  selector:
+    app: iperf-debug-server
+  ports:
+  - protocol: TCP
+    port: 5020
+    targetPort: 5020
+

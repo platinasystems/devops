@@ -1,0 +1,12 @@
+MAIN.sess_conn
+MAIN.sess_drop
+MAIN.sess_fail
+MAIN.client_req
+MAIN.cache_hit
+MAIN.cache_miss
+MAIN.n_lru_nuked
+MAIN.backend_conn
+MAIN.backend_unhealth
+MAIN.backend_busy
+MAIN.backend_fail
+MAIN.backend_retry

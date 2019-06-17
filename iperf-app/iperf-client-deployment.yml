@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iperf-client-deployment
+  labels:
+    app: iperf-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iperf-client
+  template:
+    metadata:
+      labels:
+        app: iperf-client
+    spec:
+      containers:
+      - name: iperf-client
+        image: amitpandia/iperf:v1.0
+        command: ["iperf"]
+        args: ["-c", "iperf-server-service", "-p", "5010","-t","10000000","-P","50"]
+        ports:
+        - containerPort: 5010

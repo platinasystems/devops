@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.NGINX_SERVER_DEPLOYMENT}}
+  labels:
+    app: {{.Values.NGINX_SERVER_APP}}
+    labels: {{.Values.BELONGS_TO_APP}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Values.NGINX_SERVER_APP}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.NGINX_SERVER_APP}}
+    spec:
+      containers:
+      - name: {{.Values.NGINX_SERVER_APP}}
+        image: {{.Values.SERVER_IMAGE_NAME}}
+        ports:
+        - containerPort: {{.Values.NGINX_CONTAINER_PORT}}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{.Values.NGINX_SERVER_SERVICE}}
+  labels:
+    belongsToApp: {{.Values.BELONGS_TO_APP}}
+spec:
+  selector:
+    app: {{.Values.NGINX_SERVER_APP}}
+  ports:
+  - protocol: TCP
+    port: {{.Values.NGINX_SERVER_SERVICE_PORT}}
+    targetPort: 80
+
+

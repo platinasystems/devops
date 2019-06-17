@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1 
+metadata:
+  name: {{.Values.SERVER_SERVICE_NAME}}
+  labels:
+    belongsToApp: {{.Values.BELONGS_TO_APP}}
+#  annotations:
+#    kube-router.io/service.dsr: tunnel
+spec:
+  selector:
+    app: {{.Values.SERVER_APP_NAME}}
+  externalIPs:
+    - 2.2.2.35
+  ports:
+  - protocol: {{.Values.PROTOCOL}}
+    port: {{.Values.SERVER_NODE_PORT}}
+    targetPort: {{.Values.SERVER_CONTAINER_PORT}}

@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: iperf-client-service-app
+  labels:
+    belongsToApp: iperf
+spec:
+  selector:
+    app: iperf-client-app
+  ports:
+  - protocol: TCP
+    port: 5051
+    targetPort: 5051
+

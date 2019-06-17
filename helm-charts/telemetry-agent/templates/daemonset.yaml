@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{.Values.TELEMETRY_AGENT_DAEMONSET_NAME}}
+  labels:
+    app: {{.Values.TELEMETRY_AGENT_SELECTOR_APP_NAME}}
+spec:
+  selector:
+    matchLabels:
+      app: {{.Values.TELEMETRY_AGENT_SELECTOR_APP_NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.TELEMETRY_AGENT_SELECTOR_APP_NAME}}
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      hostNetwork: true
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: {{.Values.TELEMETRY_AGENT_CONTAINER_NAME}}
+        image: {{.Values.IMAGE}}
+        env:
+        - name: KUBECONFIG
+          value: "/etc/kubernetes/admin.conf"
+        command: ["/bin/sh"]
+        args: ["-c", "/usr/bin/telemetry-agent agent -f /etc/telemetry-agent/config.cfg {{.Values.pcc_config}}"]
+        securityContext:
+         privileged: true
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /healtz
+            port: {{.Values.TELEMETRY_AGENT_PORT}}
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /healtz
+            port: {{.Values.TELEMETRY_AGENT_PORT}}
+            scheme: HTTP
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1
+        volumeMounts:
+         - name: {{.Values.TELEMETRY_AGENT_CFG_CONFIGMAP}}
+           mountPath: /etc/telemetry-agent/
+         - name: {{.Values.TELEMETRY_AGENT_K8S_CERT_CONFIGMAP}}
+           mountPath: /etc/kubernetes/ssl/
+         - name: {{.Values.TELEMETRY_AGENT_K8S_ADMINCONF_CONFIGMAP}}
+           mountPath: /etc/kubernetes
+         - name: pcc-config
+           mountPath: /etc/pcc
+         - name: log
+           mountPath: /var/log  
+      volumes:
+       - name: {{.Values.TELEMETRY_AGENT_CFG_CONFIGMAP}}
+         configMap:
+           name: {{.Values.TELEMETRY_AGENT_CFG_CONFIGMAP}}
+       - name: {{.Values.TELEMETRY_AGENT_K8S_CERT_CONFIGMAP}}
+         configMap:
+           name: {{.Values.TELEMETRY_AGENT_K8S_CERT_CONFIGMAP}}
+       - name: {{.Values.TELEMETRY_AGENT_K8S_ADMINCONF_CONFIGMAP}}
+         configMap:
+           name: {{.Values.TELEMETRY_AGENT_K8S_ADMINCONF_CONFIGMAP}}
+       - name: pcc-config
+         hostPath:
+           path: /etc/pcc
+       - name: log
+         hostPath:
+           path: /var/log    
+

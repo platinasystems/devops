@@ -1,0 +1,26 @@
+# Default values for telemetry-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+############ RELEVANT ############
+TELEMETRY_AGENT_CFG_CONFIGMAP: telemetry-agent-config
+TELEMETRY_AGENT_K8S_ADMINCONF_CONFIGMAP: telemetry-agent-k8s-adminconf
+TELEMETRY_AGENT_K8S_CERT_CONFIGMAP: telemetry-agent-k8s-cert
+
+TELEMETRY_AGENT_DAEMONSET_NAME: telemetry-agent-daemonset
+TELEMETRY_AGENT_SELECTOR_APP_NAME: telemetry-agent
+TELEMETRY_AGENT_CONTAINER_NAME: telemetry-agent-container
+IMAGE: amitpandia/telemetry-agent:v0.7
+
+TOPIC_PODDETAILS: podDetails-2
+TOPIC_SVCDETAILS: svcDetails-2
+TOPIC_NODEDETAILS: nodeDetails-2
+TOPIC_DEPLOYMENTDETAILS: deploymentDetails
+TOPIC_APPDETAILS: appDetails
+TOPIC_FLOWSTATS: flowStats
+TOPIC_DUMMYSTATS: dummyStats
+TOPIC_VARNISHSTATS: varnishStats
+
+pcc_config: /etc/pcc/profile_node.json
+TELEMETRY_AGENT_PORT: 7655
+#################################

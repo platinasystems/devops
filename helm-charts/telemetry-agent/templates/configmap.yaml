@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Values.TELEMETRY_AGENT_CFG_CONFIGMAP}}
+data:
+  config.cfg: |
+   {
+        "KafkaEnable": true,
+        "NodeStatsEnable": false,
+        "AppStatsEnable": false,
+        "DummyStatsEnable": false,
+        "KubeStateMetricsStatsEnable": false,
+        "K8sNodeStatsEnable": true,
+        "K8sPodStatsEnable": true,
+        "K8sSvcStatsEnable": true,
+        "K8sDeploymentStatsEnable": false,
+        "K8sAppDetailsStatsEnable": false,
+        "KafkaCfg": {
+                "KafkaTopic": "{{.Values.TOPIC_FLOWSTATS}}"
+        },
+        "AppCfg": {
+                "StatExe": "/usr/bin/varnishstat",
+                "StatSubset": "/etc/telemetry-agent/varnishstats.txt",
+                "Topic": "{{.Values.TOPIC_VARNISHSTATS}}",
+                "DockerContainer": "3519b5b26e3bf5685e9a48059ee69472f7d4ad6b2b3f28371b0b46aad6e8c546",
+                "ServiceName": "varnish-t1",
+                "ContainerImage": "stigt/varnish6-tata:v0.7"
+        },
+        "DummyConfig": {
+                "Topic": "{{.Values.TOPIC_DUMMYSTATS}}"
+        },
+        "NodeConfig": {
+                "IgnoredPorts": [199,10248,2601,10250,2379,2380,2604,111,22,25,46074,20244,6443,8443]
+        },
+        "KubeStateMetricsConfig": {
+                "Url": "http://10.99.5.88:8080/metrics",
+                "StatList": ["kube_pod_container_resource_requests_memory_bytes","kube_pod_container_resource_limits_memory_bytes","kube_pod_container_resource_requests_cpu_cores","kube_pod_container_resource_limits_cpu_cores","kube_node_status_capacity_cpu_cores","kube_node_status_allocatable_cpu_cores","kube_node_status_capacity_memory_bytes","kube_node_status_allocatable_memory_bytes"],
+                "Topic": "ksm1"
+        },
+        "K8sNodeConfig": {
+                "Topic": "{{.Values.TOPIC_NODEDETAILS}}"
+        },
+        "K8sPodConfig": {
+                "Topic": "{{.Values.TOPIC_PODDETAILS}}"
+        },
+        "K8sSvcConfig": {
+                "Topic": "{{.Values.TOPIC_SVCDETAILS}}"
+        },
+        "K8sDeploymentConfig": {
+                "Topic": "{{.Values.TOPIC_DEPLOYMENTDETAILS}}"
+        },
+        "K8sAppDetailsConfig": {
+                "Topic": "{{.Values.TOPIC_APPDETAILS}}"
+        }
+    }
+  loglevel: |-
+    info  
+  varnishstats.txt: |-
+    MAIN.sess_conn
+    MAIN.sess_drop
+    MAIN.sess_fail
+    MAIN.client_req
+    MAIN.cache_hit
+    MAIN.cache_miss
+    MAIN.n_lru_nuked
+    MAIN.backend_conn
+    MAIN.backend_unhealth
+    MAIN.backend_busy
+    MAIN.backend_fail
+    MAIN.backend_retry

@@ -1,0 +1,34 @@
+apiVersion: {{.Values.API_VERSION}}
+kind: Deployment
+metadata:
+  name: {{.Values.SERVER_DEPLOYMENT_NAME}}
+  labels:
+    app: {{.Values.SERVER_APP_NAME}}	
+    belongsToApp: {{.Values.BELONGS_TO_APP}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Values.SERVER_APP_NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.SERVER_APP_NAME}}
+    spec:
+      containers:
+      - name: {{.Values.SERVER_CONTAINER_NAME}}
+        image: {{.Values.SERVER_CONTAINER_IMAGE}}
+        command: ["iperf"]
+        args: ["-s", "-p", "5040"]
+        ports:
+        - containerPort: {{.Values.SERVER_CONTAINER_PORT}}
+        resources:
+          requests:
+            memory: {{.Values.SERVER_MEMORY_REQUESTS}}
+            cpu: {{.Values.SERVER_CPU_REQUESTS}}
+          limits:
+            memory: {{.Values.SERVER_MEMORY_LIMITS}}
+            cpu: {{.Values.SERVER_CPU_LIMITS}}
+
+
+
