@@ -23,6 +23,13 @@ TOPIC_VARNISHSTATS: varnishStats
 
 pcc_config: /etc/pcc/profile_node.json
 TELEMETRY_AGENT_PORT: 7655
+
+TELEMETRY_SERVICE_NAME: telemetry-agent-service
+BELONGS_TO_APP: telemetry-agent
+PROTOCOL: "TCP"
+TELEMETRY_NODE_PORT: 7655
+TELEMETRY_CONTAINER_PORT: 7655
+EXTERNAL_IP: 2.2.2.76
 #################################
 
 replicaCount: 1

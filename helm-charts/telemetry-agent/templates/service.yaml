@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{.Values.TELEMETRY_SERVICE_NAME}}
+  labels:
+    belongsToApp: {{.Values.BELONGS_TO_APP}}
+  #annotations:
+    #kube-router.io/service.dsr: tunnel
+spec:
+  selector:
+    app: {{.Values.TELEMETRY_AGENT_SELECTOR_APP_NAME}}
+  externalIPs:
+    - {{.Values.EXTERNAL_IP}}
+  ports:
+  - protocol: {{.Values.PROTOCOL}}
+    port: {{.Values.TELEMETRY_NODE_PORT}}
+    targetPort: {{.Values.TELEMETRY_CONTAINER_PORT}}
