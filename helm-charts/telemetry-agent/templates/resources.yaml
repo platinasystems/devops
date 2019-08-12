@@ -1,0 +1,74 @@
+##############################
+#    for internal access
+##############################
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: telemetry
+  namespace: telemetry  
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: telemetry-secret
+  annotations:
+    kubernetes.io/service-account.name: telemetry
+type: kubernetes.io/service-account-token
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: telemetry
+subjects:
+- kind: ServiceAccount
+  name: telemetry
+  namespace: telemetry
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+  
+  
+############################ 
+#   For external Client  
+############################
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: telemetry-user
+  namespace: telemetry
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: telemetry-user-secret
+  annotations:
+    kubernetes.io/service-account.name: telemetry-user
+type: kubernetes.io/service-account-token
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: telemetry
+  name: telemetry-user-role
+rules:
+  - apiGroups: ["*"]
+    resources: ["services/proxy"] 
+    #resourceNames: ["telemetry-agent-service","http:telemetry-agent-service:"]
+    verbs: ["get"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: telemetry-user
+subjects:
+- kind: ServiceAccount
+  name: telemetry-user
+  namespace: telemetry
+roleRef:
+  kind: Role
+  name: telemetry-user-role

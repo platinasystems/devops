@@ -76,4 +76,4 @@ spec:
        - name: log
          hostPath:
            path: /var/log    
-
+      serviceAccountName: telemetry
