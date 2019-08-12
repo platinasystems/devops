@@ -9,8 +9,6 @@ metadata:
 spec:
   selector:
     app: {{.Values.TELEMETRY_AGENT_SELECTOR_APP_NAME}}
-  externalIPs:
-    - {{.Values.EXTERNAL_IP}}
   ports:
   - protocol: {{.Values.PROTOCOL}}
     port: {{.Values.TELEMETRY_NODE_PORT}}

@@ -31,7 +31,6 @@ BELONGS_TO_APP: telemetry-agent
 PROTOCOL: "TCP"
 TELEMETRY_NODE_PORT: 7655
 TELEMETRY_CONTAINER_PORT: 7655
-EXTERNAL_IP: 2.2.2.76
 #################################
 
 replicaCount: 1
