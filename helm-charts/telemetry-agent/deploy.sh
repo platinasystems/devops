@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE=
-NAMESPACE=
+NAMESPACE=default
 NAME=telemetry-agent
 
 function usage(){
@@ -12,6 +12,7 @@ function usage(){
 	echo "	   -n, --namespace		namespace for ${NAME}"
 	echo "	-u, --undeploy			undeploy ${NAME}"
 	echo "	-s, --status			show status of ${NAME}"
+	echo "	-t, --token			${NAME} access token"
 	echo "	-h, --help			display this help and exit"
 	exit
 }
@@ -69,20 +70,24 @@ function deploy(){
 		undeploy
 		sleep 2
 	fi
-	#kubectl create clusterrolebinding cluster-system-anonymous --clusterrole=cluster-admin --user=system:anonymous
 	sed -i "s|IMAGE: .*|IMAGE: ${IMAGE}|g" ./values.yaml
+	sed -i "s|TELEMETRY_AGENT_NAMESPACE: .*|TELEMETRY_AGENT_NAMESPACE: ${NAMESPACE}|g" ./values.yaml
 	sed -i 's|"KafkaEnable": .*|"KafkaEnable": false,|g' ./templates/configmap.yaml
-	kubectl create configmap telemetry-agent-k8s-adminconf --from-file=/etc/kubernetes/admin.conf
-	kubectl create configmap telemetry-agent-k8s-cert --from-file=/etc/kubernetes/ssl/ca.crt
 	if [[ ${#NAMESPACE} -ne 0 ]];then
 		namespaceArg="--namespace $NAMESPACE"
-	fi		
+	fi
+	kubectl create configmap telemetry-agent-k8s-adminconf --from-file=/etc/kubernetes/admin.conf $namespaceArg
+	kubectl create configmap telemetry-agent-k8s-cert --from-file=/etc/kubernetes/ssl/ca.crt $namespaceArg
+	echo "installing helm-chart"
 	helm install ${namespaceArg} -n $NAME . > /dev/null
 	echo "waiting for 5 sec"
 	sleep 5
 	echo "status:"
 	echo ""
 	status
+	echo ""
+	echo -e "telemetry-agent service Access Token: \c"
+	getTelemetryToken
 }
 function undeploy(){
 	choice=
@@ -97,13 +102,20 @@ function undeploy(){
 	if [[ "$choice" == "no" || "$choice" == "n" || "$choice" == "NO" || "$choice" == "N" ]];then
 		exit 1
 	fi
+	namespace=`helm list|grep ${NAME}|awk -F" " '{print $NF}'`
+	namespaceArg="-n $namespace"
 	echo "undeploying ${NAME}"
 	helm delete --purge ${NAME}
-	kubectl delete configmap telemetry-agent-k8s-adminconf
-	kubectl delete configmap telemetry-agent-k8s-cert
+	kubectl delete configmap telemetry-agent-k8s-adminconf $namespaceArg
+	kubectl delete configmap telemetry-agent-k8s-cert $namespaceArg
 }
 function status(){
 	kubectl get pods,svc --all-namespaces -o wide|grep "${NAME}"
+}
+function getTelemetryToken(){
+	namespace=`helm list|grep ${NAME}|awk -F" " '{print $NF}'`
+	namespaceArg="-n $namespace"
+	kubectl describe secret $(kubectl get secret $namespaceArg|grep user|cut -d " " -f1) $namespaceArg|grep "token:"|awk -F" " '{print $2}'
 }
 main(){
 	if [[ $(which kubectl|wc -l) -eq 0 ]];then
@@ -128,6 +140,10 @@ main(){
 			"-s"|"--status")
 				job=status
 				shift
+				;;
+			"-t"|"--token")
+				job=getTelemetryToken
+				shift	
 				;;
 			*)
 				echo "unknown: $1"
