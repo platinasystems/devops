@@ -68,3 +68,19 @@ data:
     MAIN.backend_busy
     MAIN.backend_fail
     MAIN.backend_retry
+---    
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telemetry-agent-k8s-cert
+data:
+  ca.crt: |-
+{{ .Values.caCrt | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telemetry-agent-k8s-adminconf
+data:
+  admin.conf: |-
+{{ .Values.adminConf | indent 4 }}
