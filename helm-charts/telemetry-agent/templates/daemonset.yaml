@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{.Values.TELEMETRY_AGENT_DAEMONSET_NAME}}
+  namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}
   labels:
     app: {{.Values.TELEMETRY_AGENT_SELECTOR_APP_NAME}}
 spec:

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{.Values.TELEMETRY_AGENT_CFG_CONFIGMAP}}
+  namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}
 data:
   config.cfg: |
    {
@@ -73,6 +74,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: telemetry-agent-k8s-cert
+  namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}
 data:
   ca.crt: |-
 {{ .Values.caCrt | indent 4 }}
@@ -81,6 +83,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: telemetry-agent-k8s-adminconf
+  namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}
 data:
   admin.conf: |-
 {{ .Values.adminConf | indent 4 }}

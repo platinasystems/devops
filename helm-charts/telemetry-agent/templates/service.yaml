@@ -2,6 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{.Values.TELEMETRY_SERVICE_NAME}}
+  namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}
   labels:
     belongsToApp: {{.Values.BELONGS_TO_APP}}
   #annotations:
