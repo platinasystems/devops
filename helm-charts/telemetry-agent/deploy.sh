@@ -3,6 +3,18 @@
 IMAGE=
 NAMESPACE=default
 NAME=telemetry-agent
+ADMINCONF=/etc/kubernetes/admin.conf
+CACERTFILE=/etc/kubernetes/ssl/ca.crt
+CAPEMFILE=/etc/kubernetes/ssl/ca.pem
+CAFILE=
+if [[ -f ${CACERTFILE} ]];then
+	CAFILE=${CACERTFILE}
+elif [[ -f ${CAPEMFILE} ]];then
+	CAFILE=${CAPEMFILE}
+else
+	echo "no CA cert file found.."
+	exit 1
+fi
 
 function usage(){
 	echo "Usage: ${BASH_SOURCE[0]} [-d [-i|-n]|-u|-h]"
@@ -73,13 +85,8 @@ function deploy(){
 	sed -i "s|IMAGE: .*|IMAGE: ${IMAGE}|g" ./values.yaml
 	sed -i "s|TELEMETRY_AGENT_NAMESPACE: .*|TELEMETRY_AGENT_NAMESPACE: ${NAMESPACE}|g" ./values.yaml
 	sed -i 's|"KafkaEnable": .*|"KafkaEnable": false,|g' ./templates/configmap.yaml
-	if [[ ${#NAMESPACE} -ne 0 ]];then
-		namespaceArg="--namespace $NAMESPACE"
-	fi
-	kubectl create configmap telemetry-agent-k8s-adminconf --from-file=/etc/kubernetes/admin.conf $namespaceArg
-	kubectl create configmap telemetry-agent-k8s-cert --from-file=/etc/kubernetes/ssl/ca.crt $namespaceArg
 	echo "installing helm-chart"
-	helm install ${namespaceArg} -n $NAME . > /dev/null
+	helm install -n $NAME --set-file adminConf=${ADMINCONF},caCrt=${CAFILE} . > /dev/null
 	echo "waiting for 5 sec"
 	sleep 5
 	echo "status:"
@@ -102,12 +109,8 @@ function undeploy(){
 	if [[ "$choice" == "no" || "$choice" == "n" || "$choice" == "NO" || "$choice" == "N" ]];then
 		exit 1
 	fi
-	namespace=`helm list|grep ${NAME}|awk -F" " '{print $NF}'`
-	namespaceArg="-n $namespace"
 	echo "undeploying ${NAME}"
 	helm delete --purge ${NAME}
-	kubectl delete configmap telemetry-agent-k8s-adminconf $namespaceArg
-	kubectl delete configmap telemetry-agent-k8s-cert $namespaceArg
 }
 function status(){
 	kubectl get pods,svc --all-namespaces -o wide|grep "${NAME}"
