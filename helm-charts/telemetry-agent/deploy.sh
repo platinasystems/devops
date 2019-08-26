@@ -3,6 +3,7 @@
 IMAGE=
 NAMESPACE=default
 NAME=telemetry-agent
+SPECIAL_SERVICE=
 ADMINCONF=/etc/kubernetes/admin.conf
 CACERTFILE=/etc/kubernetes/ssl/ca.crt
 CAPEMFILE=/etc/kubernetes/ssl/ca.pem
@@ -22,6 +23,7 @@ function usage(){
 	echo "	-d, --deploy			deploy/redeploy ${NAME}"
 	echo "	   -i, --image			docker image name of ${NAME}"
 	echo "	   -n, --namespace		namespace for ${NAME}"
+	echo "	   -s, --service		service name to be monitored via its VIP"
 	echo "	-u, --undeploy			undeploy ${NAME}"
 	echo "	-s, --status			show status of ${NAME}"
 	echo "	-t, --token			${NAME} access token"
@@ -37,6 +39,10 @@ parseDeployArgs(){
 				;;
 			"-n"|"--namespace")
 				NAMESPACE=$2
+				shift 2
+				;;
+			"-s"|"--service")
+				SPECIAL_SERVICE=$2
 				shift 2
 				;;
 			*)
@@ -85,6 +91,9 @@ function deploy(){
 	sed -i "s|IMAGE: .*|IMAGE: ${IMAGE}|g" ./values.yaml
 	sed -i "s|TELEMETRY_AGENT_NAMESPACE: .*|TELEMETRY_AGENT_NAMESPACE: ${NAMESPACE}|g" ./values.yaml
 	sed -i 's|"KafkaEnable": .*|"KafkaEnable": false,|g' ./templates/configmap.yaml
+	if [[ ${#SPECIAL_SERVICE} -ne 0 ]];then
+		sed -i "s|\(.*\)\"ServiceName\": .*|\1\"ServiceName\": \"${SPECIAL_SERVICE}\",|g" ./templates/configmap.yaml
+	fi
 	echo "installing helm-chart"
 	helm install -n $NAME --set-file adminConf=${ADMINCONF},caCrt=${CAFILE} . > /dev/null
 	echo "waiting for 5 sec"
@@ -116,11 +125,12 @@ function status(){
 	kubectl get pods,svc --all-namespaces -o wide|grep "${NAME}"
 }
 function getTelemetryToken(){
-	namespace=`helm list|grep ${NAME}|awk -F" " '{print $NF}'`
+	namespace=`kubectl get svc --all-namespaces|grep ${NAME}|awk -F" " '{print $1}'`
 	namespaceArg="-n $namespace"
 	kubectl describe secret $(kubectl get secret $namespaceArg|grep user|cut -d " " -f1) $namespaceArg|grep "token:"|awk -F" " '{print $2}'
 }
 main(){
+	cd $(dirname ${BASH_SOURCE[0]})
 	if [[ $(which kubectl|wc -l) -eq 0 ]];then
 		echo "kubectl is missing."
 		exit 1

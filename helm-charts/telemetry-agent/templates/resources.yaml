@@ -13,14 +13,6 @@ metadata:
   name: telemetry
   namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}  
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: telemetry-secret
-  annotations:
-    kubernetes.io/service-account.name: telemetry
-type: kubernetes.io/service-account-token
----
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -45,14 +37,6 @@ kind: ServiceAccount
 metadata:
   name: telemetry-user
   namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: telemetry-user-secret
-  annotations:
-    kubernetes.io/service-account.name: telemetry-user
-type: kubernetes.io/service-account-token
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

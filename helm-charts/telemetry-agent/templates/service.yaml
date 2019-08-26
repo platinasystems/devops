@@ -5,8 +5,8 @@ metadata:
   namespace: {{.Values.TELEMETRY_AGENT_NAMESPACE}}
   labels:
     belongsToApp: {{.Values.BELONGS_TO_APP}}
-  #annotations:
-    #kube-router.io/service.dsr: tunnel
+  annotations:
+    kube-router.io/service.dsr: tunnel
 spec:
   selector:
     app: {{.Values.TELEMETRY_AGENT_SELECTOR_APP_NAME}}
