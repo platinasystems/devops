@@ -76,6 +76,9 @@ function deploy(){
 	if [[ ${#NAMESPACE} -ne 0 ]];then
 		namespaceArg="--namespace $NAMESPACE"
 	fi
+	if [[ `kubectl get namespace|grep ${NAMESPACE}|wc -l` -eq 0 ]];then
+		kubectl create namespace $NAMESPACE
+	fi
 	kubectl create configmap telemetry-agent-k8s-adminconf --from-file=/etc/kubernetes/admin.conf $namespaceArg
 	kubectl create configmap telemetry-agent-k8s-cert --from-file=/etc/kubernetes/ssl/ca.crt $namespaceArg
 	echo "installing helm-chart"
@@ -102,7 +105,7 @@ function undeploy(){
 	if [[ "$choice" == "no" || "$choice" == "n" || "$choice" == "NO" || "$choice" == "N" ]];then
 		exit 1
 	fi
-	namespace=`helm list|grep ${NAME}|awk -F" " '{print $NF}'`
+	namespace=`kubectl get svc --all-namespaces|grep ${NAME}|awk -F" " '{print $1}'`
 	namespaceArg="-n $namespace"
 	echo "undeploying ${NAME}"
 	helm delete --purge ${NAME}
@@ -113,7 +116,7 @@ function status(){
 	kubectl get pods,svc --all-namespaces -o wide|grep "${NAME}"
 }
 function getTelemetryToken(){
-	namespace=`helm list|grep ${NAME}|awk -F" " '{print $NF}'`
+	namespace=`kubectl get svc --all-namespaces|grep ${NAME}|awk -F" " '{print $1}'`
 	namespaceArg="-n $namespace"
 	kubectl describe secret $(kubectl get secret $namespaceArg|grep user|cut -d " " -f1) $namespaceArg|grep "token:"|awk -F" " '{print $2}'
 }
