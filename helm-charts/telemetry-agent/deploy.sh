@@ -3,13 +3,15 @@
 IMAGE=
 NAMESPACE=default
 NAME=telemetry-agent
+KAFKA=false
 
 function usage(){
-	echo "Usage: ${BASH_SOURCE[0]} [-d [-i|-n]|-u|-h]"
+	echo "Usage: ${BASH_SOURCE[0]} [-d [-i|-n|-k]|-u|-h]"
 	echo "options:"
 	echo "	-d, --deploy			deploy/redeploy ${NAME}"
 	echo "	   -i, --image			docker image name of ${NAME}"
 	echo "	   -n, --namespace		namespace for ${NAME}"
+	echo "	   -k, --kafka			enable kafka if option is provided"
 	echo "	-u, --undeploy			undeploy ${NAME}"
 	echo "	-s, --status			show status of ${NAME}"
 	echo "	-t, --token			${NAME} access token"
@@ -26,6 +28,10 @@ parseDeployArgs(){
 			"-n"|"--namespace")
 				NAMESPACE=$2
 				shift 2
+				;;
+			"-k"|"--kafka")
+				KAFKA=true
+				shift 1
 				;;
 			*)
 				echo "unknown: $1"
@@ -72,7 +78,10 @@ function deploy(){
 	fi
 	sed -i "s|IMAGE: .*|IMAGE: ${IMAGE}|g" ./values.yaml
 	sed -i "s|TELEMETRY_AGENT_NAMESPACE: .*|TELEMETRY_AGENT_NAMESPACE: ${NAMESPACE}|g" ./values.yaml
-	sed -i 's|"KafkaEnable": .*|"KafkaEnable": false,|g' ./templates/configmap.yaml
+	sed -i "s|\"KafkaEnable\": .*|\"KafkaEnable\": ${KAFKA},|g" ./templates/configmap.yaml
+	sed -i "s|\"K8sNodeStatsEnable\": .*|\"K8sNodeStatsEnable\": ${KAFKA},|g" ./templates/configmap.yaml
+	sed -i "s|\"K8sPodStatsEnable\": .*|\"K8sPodStatsEnable\": ${KAFKA},|g" ./templates/configmap.yaml
+	sed -i "s|\"K8sSvcStatsEnable\": .*|\"K8sSvcStatsEnable\": ${KAFKA},|g" ./templates/configmap.yaml
 	if [[ ${#NAMESPACE} -ne 0 ]];then
 		namespaceArg="--namespace $NAMESPACE"
 	fi
