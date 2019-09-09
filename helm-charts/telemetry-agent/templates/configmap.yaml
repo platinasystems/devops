@@ -54,7 +54,7 @@ data:
         }
     }
   loglevel: |-
-    info  
+    error  
   varnishstats.txt: |-
     MAIN.sess_conn
     MAIN.sess_drop
