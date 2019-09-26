@@ -56,7 +56,7 @@ data:
         }
     }
   loglevel: |-
-    error 
+    error
   varnishstats.txt: |-
     MAIN.sess_conn
     MAIN.sess_drop
@@ -70,7 +70,7 @@ data:
     MAIN.backend_busy
     MAIN.backend_fail
     MAIN.backend_retry
----    
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:

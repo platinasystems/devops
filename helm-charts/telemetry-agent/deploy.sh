@@ -3,7 +3,7 @@
 IMAGE=
 NAMESPACE=default
 NAME=telemetry-agent
-SPECIAL_SERVICE=
+KAFKA=false
 ADMINCONF=/etc/kubernetes/admin.conf
 CACERTFILE=/etc/kubernetes/ssl/ca.crt
 CAPEMFILE=/etc/kubernetes/ssl/ca.pem
@@ -16,14 +16,13 @@ else
 	echo "no CA cert file found.."
 	exit 1
 fi
-
 function usage(){
-	echo "Usage: ${BASH_SOURCE[0]} [-d [-i|-n]|-u|-h]"
+	echo "Usage: ${BASH_SOURCE[0]} [-d [-i|-n|-k]|-u|-h]"
 	echo "options:"
 	echo "	-d, --deploy			deploy/redeploy ${NAME}"
 	echo "	   -i, --image			docker image name of ${NAME}"
 	echo "	   -n, --namespace		namespace for ${NAME}"
-	echo "	   -s, --service		service name to be monitored via its VIP"
+	echo "	   -k, --kafka			enable kafka if option is provided"
 	echo "	-u, --undeploy			undeploy ${NAME}"
 	echo "	-s, --status			show status of ${NAME}"
 	echo "	-t, --token			${NAME} access token"
@@ -41,9 +40,9 @@ parseDeployArgs(){
 				NAMESPACE=$2
 				shift 2
 				;;
-			"-s"|"--service")
-				SPECIAL_SERVICE=$2
-				shift 2
+			"-k"|"--kafka")
+				KAFKA=true
+				shift 1
 				;;
 			*)
 				echo "unknown: $1"
@@ -90,10 +89,11 @@ function deploy(){
 	fi
 	sed -i "s|IMAGE: .*|IMAGE: ${IMAGE}|g" ./values.yaml
 	sed -i "s|TELEMETRY_AGENT_NAMESPACE: .*|TELEMETRY_AGENT_NAMESPACE: ${NAMESPACE}|g" ./values.yaml
-	sed -i 's|"KafkaEnable": .*|"KafkaEnable": false,|g' ./templates/configmap.yaml
-	if [[ ${#SPECIAL_SERVICE} -ne 0 ]];then
-		sed -i "s|\(.*\)\"ServiceName\": .*|\1\"ServiceName\": \"${SPECIAL_SERVICE}\",|g" ./templates/configmap.yaml
-	fi
+	sed -i "s|\"KafkaEnable\": .*|\"KafkaEnable\": ${KAFKA},|g" ./templates/configmap.yaml
+	sed -i "s|\"K8sNodeStatsEnable\": .*|\"K8sNodeStatsEnable\": ${KAFKA},|g" ./templates/configmap.yaml
+	sed -i "s|\"K8sPodStatsEnable\": .*|\"K8sPodStatsEnable\": ${KAFKA},|g" ./templates/configmap.yaml
+	sed -i "s|\"K8sSvcStatsEnable\": .*|\"K8sSvcStatsEnable\": ${KAFKA},|g" ./templates/configmap.yaml
+
 	echo "installing helm-chart"
 	helm install -n $NAME --set-file adminConf=${ADMINCONF},caCrt=${CAFILE} . > /dev/null
 	echo "waiting for 5 sec"
