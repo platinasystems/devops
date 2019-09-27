@@ -17,6 +17,11 @@ data:
         "K8sSvcStatsEnable": true,
         "K8sDeploymentStatsEnable": false,
         "K8sAppDetailsStatsEnable": false,
+        "LoggerCfg": {
+                "LogRotate": true,
+                "Size": 104857600,
+                "DurationSec": 86400
+        },
         "KafkaCfg": {
                 "KafkaTopic": "{{.Values.TOPIC_FLOWSTATS}}"
         },
