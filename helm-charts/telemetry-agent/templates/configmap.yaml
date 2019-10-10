@@ -9,7 +9,7 @@ data:
         "Namespace": "{{.Values.TELEMETRY_AGENT_NAMESPACE}}",
         "KafkaEnable": true,
         "NodeStatsEnable": false,
-        "AppStatsEnable": false,
+        "AppStatsEnable": true,
         "DummyStatsEnable": false,
         "KubeStateMetricsStatsEnable": false,
         "K8sNodeStatsEnable": true,
