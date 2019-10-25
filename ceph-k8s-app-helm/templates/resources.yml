@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ceph
+spec:
+  selector:
+    matchLabels:
+      app: ceph
+  template:
+    metadata:
+      labels:
+        app: ceph
+    spec:
+      volumes:
+        - name: ceph-pv-storage
+          persistentVolumeClaim:
+            claimName: ceph-pv-claim
+      containers:
+        - name: ceph-pv-container
+          image: ubuntu:18.04
+          command: ["/bin/bash"]
+          args: ["-c", "touch {{.Values.rbd_mount_path}}/log; > {{.Values.rbd_mount_path}}/log; for((i=1;i<=100;i++)); do sleep 1; echo 'count='$i >> {{.Values.rbd_mount_path}}/log; done; sleep infinity;"]
+          volumeMounts:
+            - mountPath: "{{.Values.rbd_mount_path}}"
+              name: ceph-pv-storage
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ceph-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: ceph-manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  hostPath:
+    path: "{{.Values.rbd_mount_path}}"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ceph-pv-claim
+spec:
+  storageClassName: ceph-manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
