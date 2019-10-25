@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ceph
+spec:
+  selector: 
+    matchLabels:
+      app: ceph
+  template:
+    metadata:
+      labels:
+        app: ceph
+    spec:
+      volumes:
+        - name: ceph-pv-storage
+          persistentVolumeClaim:
+            claimName: ceph-pv-claim
+      containers:
+        - name: ceph-pv-container
+          image: ubuntu:18.04
+          command: ["/bin/bash"]
+          args: ["-c", "touch /mnt/rbd1/log; > /mnt/rdb1/log; for((i=1;i<=100;i++)); do sleep 1; echo 'count='$i >> /mnt/rbd1/log; done; sleep infinity;"]
+          ports:
+            - containerPort: 80
+              name: "http-server"
+          volumeMounts:
+            - mountPath: "/mnt/rbd1"
+              name: ceph-pv-storage
