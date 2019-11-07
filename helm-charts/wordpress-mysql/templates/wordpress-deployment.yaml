@@ -10,6 +10,8 @@ spec:
   selector:
     app: {{.Values.APP_NAME}}
     tier: frontend
+  externalIPs:
+    - {{.Values.EXTERNAL_IP}}
   type: LoadBalancer
 ---
 apiVersion: v1
