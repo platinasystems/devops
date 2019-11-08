@@ -14,24 +14,10 @@ spec:
     tier: frontend
   externalIPs:
     - {{.Values.EXTERNAL_IP}}
-  type: ClusterIP
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{.Values.WORDPRESS_PV_CLAIM}}
-  labels:
-    app: {{.Values.APP_NAME}}
-spec:
-  storageClassName: {{.Values.STORAGE_CLASS_NAME}}
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{.Values.WORDPRESS_STORAGE}}
+  type: ClusterIP  
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{.Values.APP_NAME}}
   labels:
@@ -55,7 +41,7 @@ spec:
 #        - key: "node-role.kubernetes.io/master"
 #          effect: "NoSchedule"
 #          operator: "Exists"
-#END#
+#END# 
       containers:
       - image: {{.Values.WORDPRESS_IMAGE}}
         name: {{.Values.APP_NAME}}
@@ -73,7 +59,14 @@ spec:
         volumeMounts:
         - name: {{.Values.WORDPRESS_VOLUME_MOUNT}}
           mountPath: /var/www/html
-      volumes:
-      - name: {{.Values.WORDPRESS_VOLUME_MOUNT}}
-        persistentVolumeClaim:
-          claimName: {{.Values.WORDPRESS_PV_CLAIM}}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{.Values.WORDPRESS_VOLUME_MOUNT}}
+      labels:
+        app: {{.Values.APP_NAME}}
+    spec:
+      storageClassName: {{.Values.STORAGE_CLASS_NAME}}
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{.Values.WORDPRESS_STORAGE}}
