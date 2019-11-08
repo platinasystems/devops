@@ -18,8 +18,8 @@ MYSQL_IMAGE: mysql:5.6
 MYSQL_VOLUME_MOUNT: mysql-persistent-storage
 
 EXTERNAL_IP: 1.2.3.4
-MYSQL_STORAGE_MOUNT_PATH: "/mnt/ceph/mysql-img"
-WORDPRESS_STORAGE_MOUNT_PATH: "/mnt/ceph/wordpress-img"
+MYSQL_STORAGE_MOUNT_PATH: "/mnt/ceph/new-rbd"
+WORDPRESS_STORAGE_MOUNT_PATH: "/mnt/ceph/new-rbd"
 
 #################################
 
