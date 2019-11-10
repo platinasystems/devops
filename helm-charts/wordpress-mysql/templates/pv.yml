@@ -8,7 +8,7 @@ spec:
   storageClassName: manual
   capacity:
     storage: 2Gi
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Delete
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -24,7 +24,7 @@ spec:
   storageClassName: manual
   capacity:
     storage: 1Gi
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Delete
   accessModes:
     - ReadWriteOnce
   hostPath:
