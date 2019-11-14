@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: demo-app
+  name: demo-app
+spec:
+  containers:
+  - env:
+    - name: DB_DATABASE
+      value: mysql
+    - name: DB_HOST
+      value: db_mysql
+    - name: DB_PASSWORD
+      value: test
+    - name: DB_PORT
+      value: "3306"
+    - name: DB_USERNAME
+      value: test
+    image: edashdondog/readtextwritemysql:latest
+    name: demo-app
+    ports:
+    - containerPort: 80
+    resources:
+      limits:
+        cpu: 100m
+        memory: "52428800"
+  restartPolicy: OnFailure
+status: {}

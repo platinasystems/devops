@@ -1,0 +1,7 @@
+name: readwritetxtfile
+description: A generated Helm Chart for readwritetxtfile from Skippbox Kompose
+version: 0.0.1
+keywords:
+  - readwritetxtfile
+sources:
+home:
