@@ -12,7 +12,7 @@ Ansible and ansible connectivity among the Cluster Heads on which snmpd is  to b
 
 ## Execution
 
-1. Pull this repo from github using the following command: 'git pull https://github.com/platinasystems/devops/tree/master/net-snmpd'
+1. Pull this repo from github using the following command: `git pull https://github.com/platinasystems/devops/tree/master/net-snmpd`
 1. Update the given `host_vars.yml` with your own host variables(Ex. communityString, managementIP, etc.)  See example below.
 1. In the `inventory.ini` file, include all the Cluster Heads on which you want to install the snmpd, so that all  get configured at the same time.  See example below. 
 1. Run the Ansible playbook (`snmpd.yml`) using the following command: `ansible-playbook -i ./inventory.ini ./snmpd.yml`, where `snmpd.yml` is the playbook and `./inventory.ini` is an Ansible-format inventory file indicating the Cluster Head(s) you wish Net-SNMP be deployed to.
