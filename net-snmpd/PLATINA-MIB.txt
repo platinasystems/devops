@@ -1,0 +1,140 @@
+
+PLATINA-MIB DEFINITIONS ::= BEGIN
+
+-- Platina Systems SNMP MIB
+
+IMPORTS
+    MODULE-IDENTITY, enterprises FROM SNMPv2-SMI;
+
+
+platinaMIB MODULE-IDENTITY
+    LAST-UPDATED "201910010000Z"
+    ORGANIZATION "platinasystems.com"
+    CONTACT-INFO
+         "email: support@platinasystems.com"
+    DESCRIPTION
+         "Platina Systems SNMP MIB"
+    REVISION     "201910010000Z"
+    DESCRIPTION
+         "First Draft"
+    ::= { enterprises 48226 }
+
+platinaClusterHead OBJECT IDENTIFIER ::= { platinaMIB 1 }
+
+clusterHeadEntries OBJECT IDENTIFIER ::= { platinaClusterHead 1 }
+numEntries OBJECT IDENTIFIER ::= { clusterHeadEntries 0 }
+modules OBJECT IDENTIFIER ::= { platinaClusterHead 2 }
+
+commands OBJECT IDENTIFIER ::= { modules 1 }
+metadata OBJECT IDENTIFIER ::= { platinaClusterHead 3 }
+stats OBJECT IDENTIFIER ::= { platinaClusterHead 4 }
+
+cmdName OBJECT IDENTIFIER ::= { commands 2 }
+cmdArgs OBJECT IDENTIFIER ::= { commands 3 }
+cmdNull OBJECT IDENTIFIER ::= { commands 4 }
+
+cInstance OBJECT IDENTIFIER ::= { cmdName 1 }
+aInstance OBJECT IDENTIFIER ::= { cmdArgs 1 }
+nInstance OBJECT IDENTIFIER ::= { cmdNull 1 }
+
+temp OBJECT IDENTIFIER ::= { cInstance 65 }
+status OBJECT IDENTIFIER ::= { cInstance 66 }
+fan OBJECT IDENTIFIER ::= { cInstance 67 }
+psu OBJECT IDENTIFIER ::= { cInstance 68 }
+voltage OBJECT IDENTIFIER ::= { cInstance 69 }
+
+temp OBJECT IDENTIFIER ::= { aInstance 65 }
+status OBJECT IDENTIFIER ::= { aInstance 66 }
+fan OBJECT IDENTIFIER ::= { aInstance 67 }
+psu OBJECT IDENTIFIER ::= { aInstance 68 }
+voltage OBJECT IDENTIFIER ::= { aInstance 69 }
+
+temp OBJECT IDENTIFIER ::= { nInstance 65 }
+status OBJECT IDENTIFIER ::= { nInstance 66 }
+fan OBJECT IDENTIFIER ::= { nInstance 67 }
+psu OBJECT IDENTIFIER ::= { nInstance 68 }
+voltage OBJECT IDENTIFIER ::= { nInstance 69 }
+
+statA OBJECT IDENTIFIER ::= { stats 1 }
+statB OBJECT IDENTIFIER ::= { statA 2 }
+statC OBJECT IDENTIFIER ::= { statB 1 }
+
+temperature OBJECT IDENTIFIER ::= { statC 65 }
+status OBJECT IDENTIFIER ::= { statC 66 }
+fan OBJECT IDENTIFIER ::= { statC 67 }
+psu OBJECT IDENTIFIER ::= { statC 68 }
+voltage OBJECT IDENTIFIER ::= { statC 69 }
+
+hostTempTargetUnitsC OBJECT IDENTIFIER ::= { temperature 1 }
+hostTempUnitsC OBJECT IDENTIFIER ::= { temperature 2 }
+hwmonFrontTempUnitsC OBJECT IDENTIFIER ::= { temperature 3 }
+hwmonRearTempUnitsC OBJECT IDENTIFIER ::= { temperature 4 }
+psu1Temp1UnitsC OBJECT IDENTIFIER ::= { temperature 5 }
+psu1Temp2UnitsC OBJECT IDENTIFIER ::= { temperature 6 }
+psu2Temp1UnitsC OBJECT IDENTIFIER ::= { temperature 7 }
+psu2Temp2UnitsC OBJECT IDENTIFIER ::= { temperature 8 }
+qsfpTempTargetUnitsC OBJECT IDENTIFIER ::= { temperature 9 }
+qsfpTempUnitsC OBJECT IDENTIFIER ::= { temperature 10 }
+fanTray1Status OBJECT IDENTIFIER ::= { status 1 }
+fanTray2Status OBJECT IDENTIFIER ::= { status 2 }
+fanTray3Status OBJECT IDENTIFIER ::= { status 3 }
+fanTray4Status OBJECT IDENTIFIER ::= { status 4 }
+psu1Status OBJECT IDENTIFIER ::= { status 5 }
+psu2Status OBJECT IDENTIFIER ::= { status 6 }
+fanTray11SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 1 }
+fanTray12SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 2 }
+fanTray1Status OBJECT IDENTIFIER ::= { fan 3 }
+fanTray21SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 4 }
+fanTray22SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 5 }
+fanTray2Status OBJECT IDENTIFIER ::= { fan 6 }
+fanTray31SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 7 }
+fanTray32SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 8 }
+fanTray3Status OBJECT IDENTIFIER ::= { fan 9 }
+fanTray41SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 10 }
+fanTray42SpeedUnitsRpm OBJECT IDENTIFIER ::= { fan 11 }
+fanTray4Status OBJECT IDENTIFIER ::= { fan 12 }
+fanTrayDuty OBJECT IDENTIFIER ::= { fan 13 }
+fanTraySpeed OBJECT IDENTIFIER ::= { fan 14 }
+psu1AdminState OBJECT IDENTIFIER ::= { psu 1 }
+psu1Eeprom OBJECT IDENTIFIER ::= { psu 2 }
+psu1FanDirection OBJECT IDENTIFIER ::= { psu 3 }
+psu1FanSpeedUnitsRpm OBJECT IDENTIFIER ::= { psu 4 }
+psu1IOutUnitsA OBJECT IDENTIFIER ::= { psu 5 }
+psu1MfgId OBJECT IDENTIFIER ::= { psu 6 }
+psu1MfgModel OBJECT IDENTIFIER ::= { psu 7 }
+psu1PInUnitsW OBJECT IDENTIFIER ::= { psu 8 }
+psu1POutUnitsW OBJECT IDENTIFIER ::= { psu 9 }
+psu1Sn OBJECT IDENTIFIER ::= { psu 10 }
+psu1Status OBJECT IDENTIFIER ::= { psu 11 }
+psu1Temp1UnitsC OBJECT IDENTIFIER ::= { psu 12 }
+psu1Temp2UnitsC OBJECT IDENTIFIER ::= { psu 13 }
+psu1VInUnitsV OBJECT IDENTIFIER ::= { psu 14 }
+psu1VOutUnitsV OBJECT IDENTIFIER ::= { psu 15 }
+psu2AdminState OBJECT IDENTIFIER ::= { psu 16 }
+psu2Eeprom OBJECT IDENTIFIER ::= { psu 17 }
+psu2FanDirection OBJECT IDENTIFIER ::= { psu 18 }
+psu2FanSpeedUnitsRpm OBJECT IDENTIFIER ::= { psu 19 }
+psu2IOutUnitsA OBJECT IDENTIFIER ::= { psu 20 }
+psu2MfgId OBJECT IDENTIFIER ::= { psu 21 }
+psu2MfgModel OBJECT IDENTIFIER ::= { psu 22 }
+psu2PInUnitsW OBJECT IDENTIFIER ::= { psu 23 }
+psu2POutUnitsW OBJECT IDENTIFIER ::= { psu 24 }
+psu2Sn OBJECT IDENTIFIER ::= { psu 25 }
+psu2Status OBJECT IDENTIFIER ::= { psu 26 }
+psu2Temp1UnitsC OBJECT IDENTIFIER ::= { psu 27 }
+psu2Temp2UnitsC OBJECT IDENTIFIER ::= { psu 28 }
+psu2VInUnitsV OBJECT IDENTIFIER ::= { psu 29 }
+psu2VOutUnitsV OBJECT IDENTIFIER ::= { psu 30 }
+vmon1v0ThaUnitsV OBJECT IDENTIFIER ::= { voltage 1 }
+vmon1v0ThcUnitsV OBJECT IDENTIFIER ::= { voltage 2 }
+vmon1v2EthxUnitsV OBJECT IDENTIFIER ::= { voltage 3 }
+vmon1v25SysUnitsV OBJECT IDENTIFIER ::= { voltage 4 }
+vmon1v8SysUnitsV OBJECT IDENTIFIER ::= { voltage 5 }
+vmon3v3BmcUnitsV OBJECT IDENTIFIER ::= { voltage 6 }
+vmon3v3SbUnitsV OBJECT IDENTIFIER ::= { voltage 7 }
+vmon3v3SysUnitsV OBJECT IDENTIFIER ::= { voltage 8 }
+vmon3v8BmcUnitsV OBJECT IDENTIFIER ::= { voltage 9 }
+vmon5vSbUnitsV OBJECT IDENTIFIER ::= { voltage 10 }
+vmonPoweroffEvents OBJECT IDENTIFIER ::= { voltage 11 }
+
+END
