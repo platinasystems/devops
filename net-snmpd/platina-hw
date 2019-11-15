@@ -1,0 +1,22 @@
+#!/bin/bash
+
+addr="$( goes mac-ll |grep IPv6 | sed -e 's/.*link-local: //' )%eth0"
+
+case "$1" in
+  temp)
+      redis-cli --raw -h "$addr" hget platina-mk1-bmc temp | cut -f 2 -d ':' | sed -e 's/^ //'
+      ;;
+  status)
+      redis-cli --raw -h "$addr" hget platina-mk1-bmc status | cut -f 2 -d ':'  | sed -e 's/^ //'
+      ;;
+  fan)
+      redis-cli --raw -h "$addr" hget platina-mk1-bmc fan_tray | cut -f 2 -d ':' | sed -e 's/^ //'
+      ;;
+  psu)
+      redis-cli --raw -h "$addr" hget platina-mk1-bmc psu | cut -f 2 -d ':' | sed -e 's/^ //'
+      ;;
+  vmon)
+      redis-cli --raw -h "$addr" hget platina-mk1-bmc vmon | cut -f 2 -d ':' | sed -e 's/^ //'
+      ;;
+  *)
+esac

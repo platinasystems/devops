@@ -1,0 +1,102 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+   
+    - include_vars: vars.yml               ##Update your vars file in provided vars.yml with your required managementIP, communityString, contact, email and                                            ##  location
+   
+    - name: Non-Free Repository
+      apt_repository:
+         repo: deb http://deb.debian.org/debian stretch main contrib non-free
+         state: present
+      when: ansible_distribution == "Debian" and include_nonfree == true
+
+    - name: Non-Free Repository
+      apt_repository:
+        repo: deb-src http://deb.debian.org/debian stretch main contrib non-free
+        state: present
+      when: ansible_distribution == "Debian" and include_nonfree == true
+
+    - name: Non-Free Repository
+      apt_repository:
+        repo: deb http://deb.debian.org/debian-security/ stretch/updates main contrib non-free
+        state: present
+      when: ansible_distribution == "Debian" and include_nonfree == true
+
+    - name: Non-Free Repository
+      apt_repository:
+        repo:  deb-src http://deb.debian.org/debian-security/ stretch/updates main contrib non-free
+        state: present
+      when: ansible_distribution == "Debian" and include_nonfree == true
+
+    - name: Non-Free Repository
+      apt_repository:
+        repo: deb http://deb.debian.org/debian stretch-updates main contrib non-free
+        state: present
+      when: ansible_distribution == "Debian" and include_nonfree == true
+
+    - name: Non-Free Repository
+      apt_repository:
+        repo: deb-src http://deb.debian.org/debian stretch-updates main contrib non-free
+        state: present
+      when: ansible_distribution == "Debian" and include_nonfree == true
+
+    - name: ensure a list of packages installed
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+          - net-snmp
+          - net-snmp-utils
+      when: ansible_distribution == "CentOS"
+
+    - name: ensure a list of packages installed
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+          - snmp
+          - snmp-mibs-downloader
+          - snmpd
+      when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+    - name: Template a file PLATINA_MIB
+      template:
+        src: PLATINA-MIB.txt
+        dest: /usr/share/snmp/mibs/PLATINA-MIB.txt
+#        mode: '0640'
+
+
+    - name: Template a file snmpd.conf
+      template:
+        src: snmpd.conf
+        dest: /etc/snmp/snmpd.conf
+        mode: '0640'
+
+    - name: Template a file platina-hw
+      template:
+        src: platina-hw
+        dest: /etc/snmp/platina-hw
+        mode: '0755'
+
+    - name: Commenting out mibs in snmp.conf
+      copy:
+        dest: "/etc/snmp/snmp.conf"
+        content: |
+                 #mibs :
+
+    - name: Restart service snmpd, in all cases
+      service:
+        name: snmpd
+        enabled: true
+        state: restarted
+
+
+    - name: snmpbulkwalk shell command
+      shell: "snmpwalk -v2c -c testing {{ managementIp }} -m PLATINA-MIB .1.3.6.1.4.1.48226"
+      register: snmpwalk
+
+    -  debug:
+         msg: "{{ snmpwalk.stdout_lines }}"
+

@@ -1,0 +1,7 @@
+---
+managementIp: 192.68.1.49
+communityString: public
+location: SantaClara
+email: customer@customer.com
+contact: John_Smith
+include_nonfree: true
