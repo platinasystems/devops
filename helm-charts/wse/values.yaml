@@ -1,0 +1,40 @@
+# Default values for wse.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  # Must provide these values or K8s won't be able
+  # To find the image
+  repository:
+  tag:
+
+service:
+  type: ClusterIP
+  port: 80
+
+
+# This whole section defaults to empty values, but you would supply your own 
+# by using the helm -f <custom values.yaml>
+wseConfig:
+
+  conf:
+    # Server.xml: |
+    #   This is where custom xml for Serer.xml would go, comment this block out...
+    # VHost.xml: |
+    #   <xml/>
+
+  applications:
+    # appname:
+    #   conf:
+    #     Application.xml: |
+    #       <xml/>
+    #     PushPublishMap.txt: |
+    #       some plain text
+
+  transcoderTemplates:
+    # myTemplate.xml: |
+    #   <xml/>
+
+  content:
+    # custom.stream: |
+    #   custom stream contents

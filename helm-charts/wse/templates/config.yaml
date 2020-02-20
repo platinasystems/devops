@@ -1,0 +1,51 @@
+# All of the config maps with custom config that needs to override configuration
+{{- if .Values.wseConfig.conf }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wse-config-override
+data:
+{{- range $filename, $contents := .Values.wseConfig.conf }}
+  {{ $filename }}:{{ $contents | toYaml | indent 2 }}
+{{- end }}
+{{- end }}
+
+
+{{- if .Values.wseConfig.content }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wse-config-content
+data:
+{{- range $filename, $contents := .Values.wseConfig.content }}
+  {{ $filename }}:{{ $contents | toYaml | indent 2 }}
+{{- end }}
+{{- end }}
+
+
+{{- range $appname, $appConf := .Values.wseConfig.applications }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wse-app-config-{{ $appname }}
+data:
+{{- range $filename, $contents := $appConf.conf }}
+  {{ $filename }}:{{ $contents | toYaml | indent 2 }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.wseConfig.transcoderTemplates }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wse-config-transcodertemplates
+data:
+{{- range $filename, $contents := .Values.wseConfig.transcoderTemplates }}
+  {{ $filename }}:{{ $contents | toYaml | indent 2 }}
+{{- end }}
+{{- end }}
+

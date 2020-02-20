@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wse
+  template:
+    metadata:
+      labels:
+        app: wse
+    spec:
+      containers:
+        - name: wse
+          image: "{{ .Values.image.repository | required "You must provide an image.repository value" }}:{{ .Values.image.tag | default "latest" }}"
+          ports:
+            - name: rtmp
+              containerPort: 1935
+              protocol: TCP
+            - name: admin
+              containerPort: 8086
+              protocol: TCP
+            # - name: https
+            #   containerPort: 443
+            #   protocol: TCP
+          env:
+            - name: WOWZA_SILENT_INSTALL_KEY
+              value: {{ .Values.WOWZA_SILENT_INSTALL_KEY | required "Must Define WOWZA_SILENT_INSTALL_KEY" | quote }}
+            - name: WOWZA_LICENSE_KEY
+              value: {{ .Values.WOWZA_LICENSE_KEY | required "Must Define WOWZA_LICENSE_KEY" | quote }}
+            - name: WOWZA_ADMIN_USERNAME
+              value: {{ .Values.WOWZA_ADMIN_USERNAME | required "Must Define WOWZA_ADMIN_USERNAME" | quote }}
+            - name: WOWZA_ADMIN_PASSWORD
+              value: {{ .Values.WOWZA_ADMIN_PASSWORD | required "Must Define WOWZA_ADMIN_PASSWORD" | quote }}
+
+
+          volumeMounts:
+{{- if .Values.wseConfig.conf }}
+            - mountPath: /configMaps/wse-config-override
+              name: wse-config-override
+{{- end }}
+{{- if .Values.wseConfig.content }}
+            - mountPath: /configMaps/wse-config-content
+              name: wse-config-content
+{{- end }}
+{{- range $appname, $appConf := .Values.wseConfig.applications }}
+            - mountPath: /configMaps/wse-config-application/{{ $appname }}
+              name: wse-app-config-{{ $appname }}
+{{- end }}
+{{- if .Values.wseConfig.transcoderTemplates }}
+            - mountPath: /configMaps/wse-config-transcodertemplates
+              name: wse-config-transcodertemplates
+{{- end }}
+
+      # The Volumes Available to this Container
+      volumes:
+{{- if .Values.wseConfig.conf }}
+        - name: wse-config-override
+          configMap:
+            name: wse-config-override
+{{- end }}
+{{- if .Values.wseConfig.content }}
+        - name: wse-config-content
+          configMap:
+            name: wse-config-content
+{{- end }}
+{{- range $appname, $appConf := .Values.wseConfig.applications }}
+        - name: wse-app-config-{{ $appname }}
+          configMap:
+            name: wse-app-config-{{ $appname }}
+{{- end }}
+{{- if .Values.wseConfig.transcoderTemplates }}
+        - name: wse-config-transcodertemplates
+          configMap:
+            name: wse-config-transcodertemplates
+{{- end }}
+
+
