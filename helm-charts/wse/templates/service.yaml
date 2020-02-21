@@ -4,6 +4,10 @@ metadata:
   name: wse-rtmp
 spec:
   type: {{ .Values.service.type }}
+{{- if .Values.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.service.externalIPs | indent 4 }}
+{{- end }}
   ports:
     - port: 1935
       targetPort: rtmp
