@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: varnish-cfg
+  namespace: default
+data:
+  default.vcl: |
+    vcl 4.0;
+    backend default {
+        .host = "origin";
+        .port = "8080";
+    }
+    sub vcl_recv {}
+    sub vcl_deliver {
+        if (obj.hits > 0) {
+           set resp.http.X-Cache = "Platina-HIT";
+        } else {
+           set resp.http.X-Cache = "Platina-MISS";
+        }
+    }
+  secret: |
+    1234123412341234

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+#    kube-router.io/service.dsr: tunnel
+  name: varnish
+  labels:
+    app: varnish
+spec:
+  selector:
+    app: varnish
+  externalIPs:
+  - {{ .Values.service.externalIPs }}
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: varnish-metrics
+    protocol: TCP
+    port: 9131
+    targetPort: 9131

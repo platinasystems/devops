@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish
+  labels:
+    app: varnish
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: varnish
+  template:
+    metadata:
+      labels:
+        app: varnish
+    spec:
+      volumes:
+      - name: config-vol
+        configMap:
+          name: varnish-cfg
+      containers:
+      - name: varnish
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        env:
+        - name: CACHE_SIZE
+          value: {{ .Values.cacheSize }}
+        - name: VARNISHD_PARAMS
+          value: "-p default_ttl=86400 -p default_grace=3600" 
+        volumeMounts:
+        - name: config-vol
+          mountPath: /etc/varnish
+        ports:
+        - containerPort: 80
+        - name: varnish-metrics
+          containerPort: 9131
+        securityContext:
+          privileged: true
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master

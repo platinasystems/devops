@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: origin
+  labels:
+    app: origin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: origin
+  template:
+    metadata:
+      labels:
+        app: origin
+    spec:
+      containers:
+      - name: origin
+        image: stigt/vod-alpine:v0.4
+        ports:
+        - containerPort: 8080
+        securityContext:
+          privileged: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: origin
+  labels:
+    app: origin
+spec:
+  selector:
+    app: origin
+  externalIPs:
+  - 1.1.1.1
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 80
