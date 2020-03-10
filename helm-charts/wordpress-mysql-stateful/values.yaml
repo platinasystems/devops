@@ -5,7 +5,7 @@
 APP_NAME: wordpress
 WORDPRESS_PORT: 80
 WORDPRESS_PV_CLAIM: wp-pv-claim
-STORAGE_CLASS_NAME: manual
+STORAGE_CLASS_NAME: fast-rbd
 WORDPRESS_STORAGE: 1Gi
 WORDPRESS_IMAGE: wordpress:4.8-apache
 WORDPRESS_CONTAINER_PORT: 80
@@ -16,12 +16,8 @@ MYSQL_PV_NAME: mysql-pv-claim
 MYSQL_STORAGE: 1Gi
 MYSQL_IMAGE: mysql:5.6
 MYSQL_VOLUME_MOUNT: mysql-persistent-storage
-
 REPLICAS: 2
-EXTERNAL_IP: 1.2.3.4
-MYSQL_STORAGE_MOUNT_PATH: "/mnt/ceph/new-rbd"
-WORDPRESS_STORAGE_MOUNT_PATH: "/mnt/ceph/new-rbd"
-
+EXTERNAL_IP: 3.3.3.3
 #################################
 
 replicaCount: 1
