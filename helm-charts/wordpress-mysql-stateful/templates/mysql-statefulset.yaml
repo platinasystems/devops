@@ -61,7 +61,7 @@ spec:
         app: {{.Values.APP_NAME}}
     spec:
       storageClassName: {{.Values.STORAGE_CLASS_NAME}}
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: [ "{{.Values.ACCESS_MODE}}" ]
       resources:
         requests:
           storage: {{.Values.MYSQL_STORAGE}}
