@@ -3,6 +3,7 @@
 IMAGE=
 NAMESPACE=default
 NAME=telemetry-agent
+VIP=
 KAFKA=false
 ADMINCONF=/etc/kubernetes/admin.conf
 CACERTFILE=/etc/kubernetes/ssl/ca.crt
@@ -23,13 +24,30 @@ function usage(){
 	echo "	   -i, --image			docker image name of ${NAME}"
 	echo "	   -n, --namespace		namespace for ${NAME}"
 	echo "	   -k, --kafka			enable kafka if option is provided"
+	echo "	   -e, --vip			vip/external IP of service ${NAME}"
 	echo "	-u, --undeploy			undeploy ${NAME}"
 	echo "	-s, --status			show status of ${NAME}"
 	echo "	-t, --token			${NAME} access token"
 	echo "	-h, --help			display this help and exit"
 	exit
 }
-parseDeployArgs(){
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+function parseDeployArgs(){
 	while [[ $# -gt 0 ]];do
 		case $1 in
 			"-i"|"--image")
@@ -38,6 +56,10 @@ parseDeployArgs(){
 				;;
 			"-n"|"--namespace")
 				NAMESPACE=$2
+				shift 2
+				;;
+			"-e"|"--vip")
+				VIP=$2
 				shift 2
 				;;
 			"-k"|"--kafka")
@@ -54,8 +76,14 @@ parseDeployArgs(){
 		echo "ERROR: valid image name should be passed"
 		usage
 	fi
+        if [[ ${#VIP} -gt 0 ]];then
+		if ! valid_ip ${VIP}; then
+			echo "ERROR: valid VIP should be passed"
+			usage
+		fi
+	fi
 }
-parseUndeployArgs(){
+function parseUndeployArgs(){
 	while [[ $# -gt 0 ]];do
 		case $1 in
 			*)
@@ -65,7 +93,7 @@ parseUndeployArgs(){
 		esac
 	done
 }
-isExists(){
+function isExists(){
 	if [[ $(helm list|grep "${NAME}"|wc -l) -eq 0 ]];then 
 		return 0 
 	else 
@@ -86,6 +114,11 @@ function deploy(){
 		echo "redeploying ${NAME}"
 		undeploy
 		sleep 2
+	fi
+	git diff > ./telemetry-agent_previous_changes.diff
+	git checkout .
+	if [[ ${#VIP} -gt 0 ]];then
+		sed -i "s|spec:.*|spec:\n  externalIPs:\n  - ${VIP}|g" ./templates/service.yaml
 	fi
 	sed -i "s|IMAGE: .*|IMAGE: ${IMAGE}|g" ./values.yaml
 	sed -i "s|TELEMETRY_AGENT_NAMESPACE: .*|TELEMETRY_AGENT_NAMESPACE: ${NAMESPACE}|g" ./values.yaml
