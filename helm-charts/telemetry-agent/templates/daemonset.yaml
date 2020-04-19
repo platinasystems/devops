@@ -72,8 +72,8 @@ spec:
            name: {{.Values.TELEMETRY_AGENT_K8S_ADMINCONF_CONFIGMAP}}
        - name: pcc-config
          hostPath:
-           path: /etc/pcc
+           path: /opt/platina/pcc/etc
        - name: log
          hostPath:
-           path: /var/log    
+           path: /opt/platina/telemetry/log
       serviceAccountName: telemetry
