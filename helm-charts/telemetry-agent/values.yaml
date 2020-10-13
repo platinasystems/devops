@@ -12,11 +12,12 @@ TELEMETRY_AGENT_K8S_CERT_CONFIGMAP: telemetry-agent-k8s-cert
 TELEMETRY_AGENT_DAEMONSET_NAME: telemetry-agent-daemonset
 TELEMETRY_AGENT_SELECTOR_APP_NAME: telemetry-agent
 TELEMETRY_AGENT_CONTAINER_NAME: telemetry-agent-container
-IMAGE: amitpandia/telemetry-agent:v0.11
+IMAGE: amitpandia/telemetry-agent:v0.13
 
 TOPIC_PODDETAILS: podDetails-2
 TOPIC_SVCDETAILS: svcDetails-2
 TOPIC_NODEDETAILS: nodeDetails-2
+TOPIC_CLUSTERDETAILS: kclusterdetails
 TOPIC_DEPLOYMENTDETAILS: deploymentDetails
 TOPIC_APPDETAILS: appDetails
 TOPIC_FLOWSTATS: flowStats
