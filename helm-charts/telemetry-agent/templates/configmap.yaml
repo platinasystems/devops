@@ -37,6 +37,9 @@ data:
                 "StatList": ["kube_pod_container_resource_requests_memory_bytes","kube_pod_container_resource_limits_memory_bytes","kube_pod_container_resource_requests_cpu_cores","kube_pod_container_resource_limits_cpu_cores","kube_node_status_capacity_cpu_cores","kube_node_status_allocatable_cpu_cores","kube_node_status_capacity_memory_bytes","kube_node_status_allocatable_memory_bytes"],
                 "Topic": "ksm1"
         },
+        "K8sClusterConfig": {
+                "Topic": "{{.Values.TOPIC_CLUSTERDETAILS}}"
+        },        
         "K8sNodeConfig": {
                 "Topic": "{{.Values.TOPIC_NODEDETAILS}}"
         },
