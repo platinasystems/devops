@@ -17,6 +17,7 @@ IMAGE: amitpandia/telemetry-agent:v0.13-test
 TOPIC_PODDETAILS: podDetails-2
 TOPIC_SVCDETAILS: svcDetails-2
 TOPIC_NODEDETAILS: nodeDetails-2
+TOPIC_CLUSTERDETAILS: kclusterdetails
 TOPIC_DEPLOYMENTDETAILS: deploymentDetails
 TOPIC_APPDETAILS: appDetails
 TOPIC_FLOWSTATS: flowStats
