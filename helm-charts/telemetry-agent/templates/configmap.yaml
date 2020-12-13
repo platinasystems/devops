@@ -11,9 +11,9 @@ data:
         "DummyStatsEnable": false,
         "KubeStateMetricsStatsEnable": false,
         "K8sClusterStatsEnable": true,
-        "K8sNodeStatsEnable": true,
-        "K8sPodStatsEnable": true,
-        "K8sSvcStatsEnable": true,
+        "K8sNodeStatsEnable": false,
+        "K8sPodStatsEnable": false,
+        "K8sSvcStatsEnable": false,
         "K8sDeploymentStatsEnable": false,
         "K8sAppDetailsStatsEnable": false,
         "KafkaCfg": {
