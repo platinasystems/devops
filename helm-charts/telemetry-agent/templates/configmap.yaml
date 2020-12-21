@@ -13,7 +13,7 @@ data:
         "K8sClusterStatsEnable": true,
         "K8sNodeStatsEnable": false,
         "K8sPodStatsEnable": false,
-        "K8sSvcStatsEnable": false,
+        "K8sSvcStatsEnable": true,
         "K8sDeploymentStatsEnable": false,
         "K8sAppDetailsStatsEnable": false,
         "KafkaCfg": {
