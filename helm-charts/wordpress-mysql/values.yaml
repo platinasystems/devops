@@ -6,6 +6,7 @@ APP_NAME: wordpress
 WORDPRESS_PORT: 80
 WORDPRESS_PV_CLAIM: wp-pv-claim
 STORAGE_CLASS_NAME: manual
+WORDPRESS_STORAGE_PATH: "/var/lib/wordpress"
 WORDPRESS_STORAGE: 1Gi
 WORDPRESS_IMAGE: wordpress:4.8-apache
 WORDPRESS_CONTAINER_PORT: 80
@@ -13,6 +14,7 @@ WORDPRESS_VOLUME_MOUNT: wordpress-persistent-storage
 MYSQL_APP_NAME: wordpress-mysql
 MYSQL_PORT: 3306
 MYSQL_PV_NAME: mysql-pv-claim
+MYSQL_STORAGE_PATH: "/var/lib/mysql"
 MYSQL_STORAGE: 1Gi
 MYSQL_IMAGE: mysql:5.6
 MYSQL_VOLUME_MOUNT: mysql-persistent-storage

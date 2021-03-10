@@ -1,0 +1,31 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistent-storage
+  labels:
+    type: local
+spec:
+  storageClassName: {{.Values.STORAGE_CLASS_NAME}}
+  capacity:
+    storage: 2Gi
+  persistentVolumeReclaimPolicy: Recycle
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{.Values.WORDPRESS_STORAGE_PATH}}
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistent-storage-wp
+  labels:
+    type: local
+spec:
+  storageClassName: {{.Values.STORAGE_CLASS_NAME}}
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Recycle
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{.Values.MYSQL_STORAGE_PATH}}
