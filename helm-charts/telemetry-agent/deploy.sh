@@ -91,7 +91,7 @@ function deploy(){
 	kubectl create configmap telemetry-agent-k8s-adminconf --from-file=/etc/kubernetes/admin.conf $namespaceArg
 	kubectl create configmap telemetry-agent-k8s-cert --from-file=/etc/kubernetes/ssl/ca.crt $namespaceArg
 	echo "installing helm-chart"
-	helm install ${namespaceArg} -n $NAME . > /dev/null
+	helm install ${NAME} ${namespaceArg} . > /dev/null
 	echo "waiting for 5 sec"
 	sleep 5
 	echo "status:"
