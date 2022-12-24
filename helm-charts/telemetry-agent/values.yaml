@@ -12,7 +12,8 @@ TELEMETRY_AGENT_K8S_CERT_CONFIGMAP: telemetry-agent-k8s-cert
 TELEMETRY_AGENT_DAEMONSET_NAME: telemetry-agent-daemonset
 TELEMETRY_AGENT_SELECTOR_APP_NAME: telemetry-agent
 TELEMETRY_AGENT_CONTAINER_NAME: telemetry-agent-container
-IMAGE: gvogety/telemetry-agent:v1.0-ipv6
+#IMAGE: gvogety/telemetry-agent:v1.0-ipv6
+IMAGE: fszyang/telemetry-agent:v1.1
 
 TOPIC_PODDETAILS: podDetails-2
 TOPIC_SVCDETAILS: svcDetails-2
